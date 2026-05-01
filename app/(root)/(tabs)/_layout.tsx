@@ -1,50 +1,61 @@
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { Tabs } from "expo-router";
 import { Icon, Label, NativeTabs } from "expo-router/unstable-native-tabs";
-import { Platform } from "react-native";
+import { Platform, View } from "react-native";
 import "../../../global.css";
 
 export default function TabLayout() {
   if (Platform.OS === "android") {
     return (
-      <Tabs>
-        <Tabs.Screen
-          name="index"
-          options={{
-            title: "",
-            tabBarIcon: ({ color, size }) => (
-              <Ionicons name="home" size={size} color={color} />
-            ),
+      <View className="flex-1 bg-red-500">
+        <Tabs
+          screenOptions={{
+            headerShown: false, // <-- This is the key fix
+            tabBarStyle: {
+              borderTopWidth: 0, // Removes the physical border line
+              elevation: 0, // Removes the shadow on Android
+              backgroundColor: "#f9fafb",
+            },
           }}
-        />
-        <Tabs.Screen
-          name="search"
-          options={{
-            title: "",
-            tabBarIcon: ({ color, size }) => (
-              <Ionicons name="search" size={size} color={color} />
-            ),
-          }}
-        />
-        <Tabs.Screen
-          name="saved"
-          options={{
-            title: "",
-            tabBarIcon: ({ color, size }) => (
-              <Ionicons name="heart" size={size} color={color} />
-            ),
-          }}
-        />
-        <Tabs.Screen
-          name="profile"
-          options={{
-            title: "",
-            tabBarIcon: ({ color, size }) => (
-              <Ionicons name="person" size={size} color={color} />
-            ),
-          }}
-        />
-      </Tabs>
+        >
+          <Tabs.Screen
+            name="index"
+            options={{
+              title: "",
+              tabBarIcon: ({ color, size }) => (
+                <Ionicons name="home" size={size} color={color} />
+              ),
+            }}
+          />
+          <Tabs.Screen
+            name="search"
+            options={{
+              title: "",
+              tabBarIcon: ({ color, size }) => (
+                <Ionicons name="search" size={size} color={color} />
+              ),
+            }}
+          />
+          <Tabs.Screen
+            name="saved"
+            options={{
+              title: "",
+              tabBarIcon: ({ color, size }) => (
+                <Ionicons name="heart" size={size} color={color} />
+              ),
+            }}
+          />
+          <Tabs.Screen
+            name="profile"
+            options={{
+              title: "",
+              tabBarIcon: ({ color, size }) => (
+                <Ionicons name="person" size={size} color={color} />
+              ),
+            }}
+          />
+        </Tabs>
+      </View>
     );
   }
 
