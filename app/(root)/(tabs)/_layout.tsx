@@ -1,4 +1,5 @@
 import Ionicons from "@expo/vector-icons/Ionicons";
+import { BlurView } from "expo-blur";
 import { Tabs } from "expo-router";
 import { Icon, Label, NativeTabs } from "expo-router/unstable-native-tabs";
 import { Platform, View } from "react-native";
@@ -16,12 +17,19 @@ export default function TabLayout() {
               elevation: 0, // Removes the shadow on Android
               backgroundColor: "#f9fafb",
             },
+            tabBarBackground: () => (
+              <BlurView
+                intensity={90} // Adjust for more/less blur
+                tint="light" // Options: 'light', 'dark', 'default'
+                style={{ flex: 1 }}
+              />
+            ),
           }}
         >
           <Tabs.Screen
             name="index"
             options={{
-              title: "",
+              title: "home",
               tabBarIcon: ({ color, size }) => (
                 <Ionicons name="home" size={size} color={color} />
               ),
@@ -30,7 +38,7 @@ export default function TabLayout() {
           <Tabs.Screen
             name="search"
             options={{
-              title: "",
+              title: "search",
               tabBarIcon: ({ color, size }) => (
                 <Ionicons name="search" size={size} color={color} />
               ),
@@ -39,7 +47,7 @@ export default function TabLayout() {
           <Tabs.Screen
             name="saved"
             options={{
-              title: "",
+              title: "saved",
               tabBarIcon: ({ color, size }) => (
                 <Ionicons name="heart" size={size} color={color} />
               ),
@@ -48,7 +56,7 @@ export default function TabLayout() {
           <Tabs.Screen
             name="profile"
             options={{
-              title: "",
+              title: "profile",
               tabBarIcon: ({ color, size }) => (
                 <Ionicons name="person" size={size} color={color} />
               ),
