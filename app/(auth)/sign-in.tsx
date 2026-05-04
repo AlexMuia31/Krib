@@ -1,10 +1,185 @@
+import { useSignIn } from "@clerk/expo";
+import { Link, useRouter } from "expo-router";
 import React from "react";
-import { Text, View } from "react-native";
+import {
+  ActivityIndicator,
+  Image,
+  KeyboardAvoidingView,
+  ScrollView,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View,
+} from "react-native";
 
 export default function SignIn() {
+  const { signIn, errors, fetchStatus } = useSignIn();
+
+  const [email, setEmail] = React.useState("");
+  const [password, setPassword] = React.useState("");
+  const [code, setCode] = React.useState("");
+
+  const router = useRouter();
+
+  const isLoading = fetchStatus === "fetching";
+
+  const onSignInPress = async () => {
+    const { error } = await signIn.password({
+      emailAddress: email,
+      password,
+    });
+
+    if (error) {
+      alert(error.message);
+      return;
+    }
+    if (signIn.status === "complete") {
+      await signIn.finalize({
+        navigate: ({ session, decorateUrl }) => {
+          if (session?.currentTask) {
+            console.log(session?.currentTask);
+            return;
+          }
+          const url = decorateUrl("/");
+          router.replace(url as any);
+        },
+      });
+    } else if (signIn.status === "needs_second_factor") {
+      await signIn.mfa.sendPhoneCode();
+    } else if (signIn.status === "needs_client_trust") {
+      const emailCodeFactor = signIn.supportedSecondFactors.find(
+        (factor) => factor.strategy === "email_code",
+      );
+      if (emailCodeFactor) {
+        await signIn.mfa.sendEmailCode();
+      }
+    }
+  };
+
+  const onVerifyPress = async () => {
+    await signIn.mfa.verifyEmailCode({ code });
+
+    if (signIn.status === "complete") {
+      await signIn.finalize({
+        navigate: ({ session, decorateUrl }) => {
+          if (session?.currentTask) {
+            console.log(session?.currentTask);
+            return;
+          }
+          const url = decorateUrl("/");
+          router.replace(url as any);
+        },
+      });
+    }
+  };
+
+  if (signIn.status === "needs_client_trust") {
+    return (
+      <View className="flex-1 justify-center px-6 py-12">
+        <Image
+          source={require("../../assets/images/kribb.png")}
+          className="w-32 h-16 mb-8"
+          resizeMode="contain"
+        />
+        <Text className="text-3xl font-bold text-gray-800 mb-2">
+          Verify Your Account
+        </Text>
+        <Text>we&apos;ve sent an email to {email}</Text>
+
+        <TextInput
+          className="w-full border border-gray-300 rounded-xl px-4 py-3 mt-4"
+          placeholder="Enter verification code"
+          placeholderTextColor="#9ca3af"
+          keyboardType="number-pad"
+          value={code}
+          onChangeText={setCode}
+        />
+        {errors.fields.code && (
+          <Text className="text-red-500 mb-4">
+            {errors.fields.code.message}
+          </Text>
+        )}
+        <TouchableOpacity
+          onPress={onVerifyPress}
+          disabled={isLoading}
+          className="bg-blue-500 rounded-xl py-3 mt-4"
+        >
+          {isLoading ? (
+            <ActivityIndicator color="white" />
+          ) : (
+            <Text className="text-white text-center font-bold">Verify</Text>
+          )}
+        </TouchableOpacity>
+        <TouchableOpacity
+          onPress={() => signIn.mfa.sendEmailCode()}
+          className=" py-3 mt-1"
+        >
+          <Text className="text-blue-600 font-bold">Resend Code</Text>
+        </TouchableOpacity>
+      </View>
+    );
+  }
   return (
-    <View className="flex-1 items-center justify-center bg-white">
-      <Text className="text-xl font-bold">SignIn</Text>
-    </View>
+    <KeyboardAvoidingView style={{ flex: 1 }} behavior="padding">
+      <ScrollView
+        contentContainerStyle={{ flexGrow: 1 }}
+        className="bg-white"
+        keyboardShouldPersistTaps="handled"
+      >
+        <View className="flex-1 justify-center px-6 py-12">
+          <Image
+            source={require("../../assets/images/kribb.png")}
+            className="w-32 h-16 mb-8"
+            resizeMode="contain"
+          />
+          <Text className="text-3xl font-bold text-gray-800 mb-2">Sign In</Text>
+          <Text>Find your dream home today</Text>
+
+          <TextInput
+            className="w-full border border-gray-300 rounded-xl px-4 py-3 mb-4"
+            placeholder="Email address "
+            value={email}
+            onChangeText={setEmail}
+            keyboardType="email-address"
+            autoCapitalize="none"
+          />
+          {errors.fields.identifier && (
+            <Text className="text-red-500 mb-4">
+              {errors.fields.identifier.message}
+            </Text>
+          )}
+          <TextInput
+            className="w-full border border-gray-300 rounded-xl px-4 py-3 mb-6"
+            placeholder="Password"
+            value={password}
+            onChangeText={setPassword}
+            secureTextEntry
+          />
+          {errors.fields.password && (
+            <Text className="text-red-500 mb-4">
+              {errors.fields.password.message}
+            </Text>
+          )}
+          <TouchableOpacity
+            onPress={onSignInPress}
+            disabled={isLoading}
+            className="bg-blue-500 rounded-xl py-3 mt-4"
+          >
+            {isLoading ? (
+              <ActivityIndicator color="white" />
+            ) : (
+              <Text className="text-white text-center font-bold">Sign In</Text>
+            )}
+          </TouchableOpacity>
+          <View className="flex-row justify-center mt-4 gap-2">
+            <Text className="text-gray-500">don&apos;t have an account?</Text>
+            <Link href="/sign-up">
+              <Text className="text-blue-600 font-semibold">Sign Up</Text>
+            </Link>
+          </View>
+          <View nativeID="clerk-captcha" />
+        </View>
+      </ScrollView>
+    </KeyboardAvoidingView>
   );
 }
