@@ -73,7 +73,7 @@ export default function SignUp() {
         <Text className="text-3xl font-bold text-gray-800 mb-2">
           Verify Your Account
         </Text>
-        <Text>we've sent an email to {email}</Text>
+        <Text>we&apos;ve sent an email to {email}</Text>
 
         <TextInput
           className="w-full border border-gray-300 rounded-xl px-4 py-3 mt-4"
