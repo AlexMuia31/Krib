@@ -51,9 +51,9 @@ export default function TabLayout() {
             <Tabs.Screen
               name="create"
               options={{
-                title: "Add Property",
+                title: "add property",
                 tabBarIcon: ({ color, size }) => (
-                  <Ionicons name="search" size={size} color={color} />
+                  <Ionicons name="add-circle" size={size} color={color} />
                 ),
               }}
             />
@@ -95,7 +95,7 @@ export default function TabLayout() {
       {isAdmin && (
         <NativeTabs.Trigger name="create">
           <Label>Add Property</Label>
-          <Icon sf="plus.capsule.fill" />
+          <Icon sf="plus.circle.fill" />
         </NativeTabs.Trigger>
       )}
       <NativeTabs.Trigger name="saved">
