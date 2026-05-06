@@ -1,3 +1,4 @@
+import { useUserStore } from "@/store/userStore";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { BlurView } from "expo-blur";
 import { Tabs } from "expo-router";
@@ -6,6 +7,8 @@ import { Platform, View } from "react-native";
 import "../../../global.css";
 
 export default function TabLayout() {
+  const isAdmin = useUserStore((state) => state.isAdmin);
+
   if (Platform.OS === "android") {
     return (
       <View className="flex-1 bg-red-500">
@@ -44,6 +47,17 @@ export default function TabLayout() {
               ),
             }}
           />
+          {isAdmin && (
+            <Tabs.Screen
+              name="create"
+              options={{
+                title: "Add Property",
+                tabBarIcon: ({ color, size }) => (
+                  <Ionicons name="search" size={size} color={color} />
+                ),
+              }}
+            />
+          )}
           <Tabs.Screen
             name="saved"
             options={{
@@ -78,6 +92,12 @@ export default function TabLayout() {
         <Label>Search</Label>
         <Icon sf="magnifyingglass" />
       </NativeTabs.Trigger>
+      {isAdmin && (
+        <NativeTabs.Trigger name="create">
+          <Label>Add Property</Label>
+          <Icon sf="plus.capsule.fill" />
+        </NativeTabs.Trigger>
+      )}
       <NativeTabs.Trigger name="saved">
         <Label>Saved</Label>
         <Icon sf="heart.fill" />
