@@ -1,6 +1,7 @@
 import { supabase } from "@/lib/supabase";
 import { Property } from "@/types";
 import { useUser } from "@clerk/expo";
+import Ionicons from "@expo/vector-icons/Ionicons";
 import { useFocusEffect, useRouter } from "expo-router";
 import React, { useCallback, useState } from "react";
 import {
@@ -9,6 +10,7 @@ import {
   FlatList,
   Image,
   Text,
+  TouchableOpacity,
   View,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -82,7 +84,7 @@ export default function HomeScreen() {
   }
 
   return (
-    <SafeAreaView className="flex-1 bg-gray-50">
+    <SafeAreaView className="flex-1 bg-gray-50 px-5">
       <FlatList
         data={recommended}
         keyExtractor={(item) => item.id}
@@ -91,7 +93,7 @@ export default function HomeScreen() {
         ListHeaderComponent={
           <View>
             {/* header */}
-            <View className="flex-row items-center justify-between px-5 pt-4 pb-5">
+            <View className="flex-row items-center justify-between  pt-4 pb-5">
               <Image
                 source={require("../../../assets/images/kribb.png")}
                 style={{ width: 90, height: 36 }}
@@ -104,17 +106,22 @@ export default function HomeScreen() {
               </View>
             </View>
             {/* search bar */}
+            <TouchableOpacity
+              onPress={() => router.push("/(root)/(tabs)/search")}
+            >
+              <Ionicons name="search-outline" size={18} color="#9CA3AF" />
+            </TouchableOpacity>
 
             {/* Featured section */}
 
             {/* recommended header */}
-            <Text className="text-gray-900 text-lg font-bold px-5 mb-4">
+            <Text className="text-gray-900 text-lg font-bold  mb-4">
               Recommended
             </Text>
           </View>
         }
         renderItem={({ item }) => (
-          <View className="px-5">
+          <View className="">
             <Text>{item.title}</Text>
           </View>
         )}
