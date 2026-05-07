@@ -108,12 +108,43 @@ export default function HomeScreen() {
             {/* search bar */}
             <TouchableOpacity
               onPress={() => router.push("/(root)/(tabs)/search")}
+              className="mb-6 flex-row items-center bg-white rounded-2xl p-2 gap-3"
+              style={{
+                shadowColor: "#000",
+                shadowOffset: { width: 0, height: 1 },
+                shadowOpacity: 0.06,
+                shadowRadius: 6,
+                elevation: 2,
+              }}
             >
               <Ionicons name="search-outline" size={18} color="#9CA3AF" />
+              <Text className="text-gray-400 text-sm flex-1">
+                Search properties...
+              </Text>
+              <TouchableOpacity
+                onPress={() =>
+                  router.push("/(root)/(tabs)/search?openFilters=true")
+                }
+                className="w-8 h-8 bg-blue-600 rounded-xl items-center justify-center"
+              >
+                <Ionicons name="options-outline" size={15} color="white" />
+              </TouchableOpacity>
             </TouchableOpacity>
 
             {/* Featured section */}
-
+            <View className="mb-6">
+              <Text className="text-gray-900 text-lg font-bold  mb-4">
+                Featured
+              </Text>
+              <FlatList
+                data={featured}
+                keyExtractor={(item) => item.id}
+                horizontal
+                showsHorizontalScrollIndicator={false}
+                renderItem={({ item }) => <Text>{item.title}</Text>}
+                contentContainerStyle={{ paddingHorizontal: 20 }}
+              />
+            </View>
             {/* recommended header */}
             <Text className="text-gray-900 text-lg font-bold  mb-4">
               Recommended
