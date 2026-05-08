@@ -1,4 +1,5 @@
 import FeaturedCard from "@/components/FeaturedCard";
+import PropertyCard from "@/components/PropertyCard";
 import { supabase } from "@/lib/supabase";
 import { Property } from "@/types";
 import { useUser } from "@clerk/expo";
@@ -154,7 +155,7 @@ export default function HomeScreen() {
         }
         renderItem={({ item }) => (
           <View className="">
-            <Text>{item.title}</Text>
+            <PropertyCard property={item} />
           </View>
         )}
         ListEmptyComponent={
