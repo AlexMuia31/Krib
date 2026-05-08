@@ -1,3 +1,4 @@
+import FeaturedCard from "@/components/FeaturedCard";
 import { supabase } from "@/lib/supabase";
 import { Property } from "@/types";
 import { useUser } from "@clerk/expo";
@@ -141,7 +142,7 @@ export default function HomeScreen() {
                 keyExtractor={(item) => item.id}
                 horizontal
                 showsHorizontalScrollIndicator={false}
-                renderItem={({ item }) => <Text>{item.title}</Text>}
+                renderItem={({ item }) => <FeaturedCard property={item} />}
                 contentContainerStyle={{ paddingHorizontal: 20 }}
               />
             </View>
