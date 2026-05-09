@@ -14,6 +14,8 @@ export default function PropertyCard({
   showSave?: boolean;
 }) {
   const router = useRouter();
+
+  const isSaved = true;
   return (
     <TouchableOpacity
       className="flex-row mb-4 rounded-3xl overflow-hidden bg-white"
@@ -43,7 +45,6 @@ export default function PropertyCard({
           </View>
         </View>
         <View className="flex-row items-center justify-between">
-          {" "}
           <Text className="text-blue-600 font-bold  text-sm">
             {`KSH ${property.price.toLocaleString()}`}
           </Text>
@@ -68,6 +69,13 @@ export default function PropertyCard({
           </View>
         </View>
       </View>
+      <TouchableOpacity className="w-10 items-center pt-3">
+        <Ionicons
+          name={isSaved ? "heart" : "heart-outline"}
+          size={18}
+          color={isSaved ? "#EF4444" : "#9CA3AF"}
+        />
+      </TouchableOpacity>
     </TouchableOpacity>
   );
 }
