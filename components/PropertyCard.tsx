@@ -15,7 +15,7 @@ export default function PropertyCard({
 }) {
   const router = useRouter();
 
-  const isSaved = false;
+  const isSaved = true;
   return (
     <TouchableOpacity
       className="flex-row mb-4 rounded-3xl overflow-hidden bg-white"
