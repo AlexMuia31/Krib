@@ -27,7 +27,7 @@ export default function PropertyCard({
         elevation: 4,
         opacity: property.is_sold ? 0.5 : 1,
       }}
-      onPress={() => router.push(`/(root)/property/${property.id}`)}
+      // onPress={() => router.push(`/(root)/property/${property.id}`)}
     >
       <Image
         source={{ uri: property.images.length >0 ? property.images[0]: require("../assets/images/kribb.png") }}
