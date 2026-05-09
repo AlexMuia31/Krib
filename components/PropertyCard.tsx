@@ -30,7 +30,7 @@ export default function PropertyCard({
       onPress={() => router.push(`/(root)/property/${property.id}`)}
     >
       <Image
-        source={{ uri: property.images[0] }}
+        source={{ uri: property.images.length >0 ? property.images[0]: require("../assets/images/kribb.png") }}
         className="w-28 h-28"
         resizeMode="cover"
       />
