@@ -95,155 +95,176 @@ export default function FilterModal({
     <Modal
       visible={visible}
       animationType="slide"
-      presentationStyle="pageSheet"
       onRequestClose={onClose}
+      transparent={true}
     >
-      <View className="flex-1 bg-gray-50 ">
-        <View className="flex-row items-center justify-between px-5 pt-6 pb-4 bg-white border-b border-gray-100">
-          <TouchableOpacity onPress={onClose} className="p-1">
-            <Ionicons name="close" size={22} color="#374151" />
-          </TouchableOpacity>
-          <Text className="text-lg font-bold text-gray-500">Filters</Text>
-          <TouchableOpacity>
-            <Text className="text-blue-600 font-semibold text-sm">Reset</Text>
-          </TouchableOpacity>
+      {/* Backdrop */}
+      <TouchableOpacity
+        className="flex-1 bg-black/40"
+        activeOpacity={1}
+        onPress={onClose}
+      />
+      {/* Sheet — roughly 80% of screen */}
+      <View
+        className="bg-gray-50 "
+        style={{
+          height: "82%",
+          borderTopLeftRadius: 24,
+          borderTopRightRadius: 24,
+          overflow: "hidden",
+        }}
+      >
+        {/* Drag handle */}
+        <View className="items-center pt-3 pb-1">
+          <View className="w-10 h-1 rounded-full bg-gray-300" />
         </View>
-        <ScrollView
-          className="flex-1"
-          contentContainerStyle={{ padding: 20, paddingBottom: 40 }}
-          showsVerticalScrollIndicator={false}
-        >
-          <Text className="text-base font-bold text-gray-800 mb-3">
-            Property Type
-          </Text>
-          <View className="flex-row flex-wrap gap-2 mb-6">
-            {TYPES.map((item) => (
-              <TouchableOpacity
-                key={String(item.value)}
-                onPress={() => setType(item.value)}
-                className={chip(type === item.value)}
-                style={shadow}
-              >
-                <Text className={chipText(type === item.value)}>
-                  {item.label}
-                </Text>
-              </TouchableOpacity>
-            ))}
+        <View className="flex-1 bg-gray-50 ">
+          <View className="flex-row items-center justify-between px-5 pt-6 pb-4 bg-white border-b border-gray-100">
+            <TouchableOpacity onPress={onClose} className="p-1">
+              <Ionicons name="close" size={22} color="#374151" />
+            </TouchableOpacity>
+            <Text className="text-lg font-bold text-gray-500">Filters</Text>
+            <TouchableOpacity>
+              <Text className="text-blue-600 font-semibold text-sm">Reset</Text>
+            </TouchableOpacity>
           </View>
-          {/* Bedrooms */}
-          <Text className="text-base font-bold text-gray-800 mb-3">
-            Bedrooms
-          </Text>
-          <View className="flex-row gap-2 mb-6">
-            {BEDS.map((item) => (
-              <TouchableOpacity
-                key={String(item.value)}
-                onPress={() => setBedrooms(item.value)}
-                className={`flex-1 items-center py-3 rounded-2xl border ${
-                  bedrooms === item.value
-                    ? "bg-blue-600 border-blue-600"
-                    : "bg-white border-gray-200"
-                }`}
-                style={shadow}
-              >
-                <Text
-                  className={`text-sm font-bold ${
-                    bedrooms === item.value ? "text-white" : "text-gray-600"
-                  }`}
-                >
-                  {item.label}
-                </Text>
-              </TouchableOpacity>
-            ))}
-          </View>
-          {/* Price Range */}
-          <Text className="text-base font-bold text-gray-800 mb-3">
-            Price Range (KSH)
-          </Text>
-          <View className="flex-row gap-3 mb-3">
-            {[
-              {
-                label: "Min Price",
-                value: localMin,
-                onChange: setLocalMin,
-                placeholder: "0",
-              },
-              {
-                label: "Max Price",
-                value: localMax,
-                onChange: setLocalMax,
-                placeholder: "50000000",
-              },
-            ].map(({ label, value, onChange, placeholder }) => (
-              <View key={label} className="flex-1">
-                <Text className="text-xs text-gray-500 mb-1.5 font-medium">
-                  {label}
-                </Text>
-                <View
-                  className="flex-row items-center bg-white rounded-2xl px-3 border border-gray-200"
+          <ScrollView
+            className="flex-1"
+            contentContainerStyle={{ padding: 20, paddingBottom: 40 }}
+            showsVerticalScrollIndicator={false}
+          >
+            <Text className="text-base font-bold text-gray-800 mb-3">
+              Property Type
+            </Text>
+            <View className="flex-row flex-wrap gap-2 mb-6">
+              {TYPES.map((item) => (
+                <TouchableOpacity
+                  key={String(item.value)}
+                  onPress={() => setType(item.value)}
+                  className={chip(type === item.value)}
                   style={shadow}
                 >
-                  <Text className="text-gray-400 text-sm mr-1">KSH</Text>
-                  <TextInput
-                    className="flex-1 py-3 text-gray-800"
-                    placeholder={placeholder}
-                    placeholderTextColor="#9CA3AF"
-                    keyboardType="numeric"
-                    value={value}
-                    onChangeText={onChange}
-                  />
-                </View>
-              </View>
-            ))}
-          </View>
-          {/* Price Presets */}
-          <View className="flex-row flex-wrap gap-2">
-            {PRICE_PRESETS.map((p) => {
-              const active = minPrice === p.min && maxPrice === p.max;
-              return (
-                <TouchableOpacity
-                  key={p.label}
-                  onPress={() => {
-                    setLocalMin(p.min ? String(p.min) : "");
-                    setLocalMax(p.max ? String(p.max) : "");
-                    setMinPrice(p.min);
-                    setMaxPrice(p.max);
-                  }}
-                  className={`px-3 py-1.5 rounded-full border ${
-                    active
-                      ? "bg-blue-50 border-blue-300"
-                      : "bg-white border-gray-200"
-                  }`}
-                >
-                  <Text
-                    className={`text-xs font-medium ${
-                      active ? "text-blue-600" : "text-gray-500"
-                    }`}
-                  >
-                    {p.label}
+                  <Text className={chipText(type === item.value)}>
+                    {item.label}
                   </Text>
                 </TouchableOpacity>
-              );
-            })}
-          </View>
-        </ScrollView>
-        {/* Apply Button */}
-        <View className="px-5 pb-8 pt-4 bg-white border-t border-gray-100">
-          <TouchableOpacity
-            onPress={handleApply}
-            className="bg-blue-600 rounded-2xl py-4 items-center"
-            style={{
-              shadowColor: "#2563EB",
-              shadowOffset: { width: 0, height: 4 },
-              shadowOpacity: 0.3,
-              shadowRadius: 8,
-              elevation: 4,
-            }}
-          >
-            <Text className="text-white font-bold text-base">
-              Apply Filters{activeCount > 0 ? ` (${activeCount})` : ""}
+              ))}
+            </View>
+            {/* Bedrooms */}
+            <Text className="text-base font-bold text-gray-800 mb-3">
+              Bedrooms
             </Text>
-          </TouchableOpacity>
+            <View className="flex-row gap-2 mb-6">
+              {BEDS.map((item) => (
+                <TouchableOpacity
+                  key={String(item.value)}
+                  onPress={() => setBedrooms(item.value)}
+                  className={`flex-1 items-center py-3 rounded-2xl border ${
+                    bedrooms === item.value
+                      ? "bg-blue-600 border-blue-600"
+                      : "bg-white border-gray-200"
+                  }`}
+                  style={shadow}
+                >
+                  <Text
+                    className={`text-sm font-bold ${
+                      bedrooms === item.value ? "text-white" : "text-gray-600"
+                    }`}
+                  >
+                    {item.label}
+                  </Text>
+                </TouchableOpacity>
+              ))}
+            </View>
+            {/* Price Range */}
+            <Text className="text-base font-bold text-gray-800 mb-3">
+              Price Range (KSH)
+            </Text>
+            <View className="flex-row gap-3 mb-3">
+              {[
+                {
+                  label: "Min Price",
+                  value: localMin,
+                  onChange: setLocalMin,
+                  placeholder: "0",
+                },
+                {
+                  label: "Max Price",
+                  value: localMax,
+                  onChange: setLocalMax,
+                  placeholder: "50000000",
+                },
+              ].map(({ label, value, onChange, placeholder }) => (
+                <View key={label} className="flex-1">
+                  <Text className="text-xs text-gray-500 mb-1.5 font-medium">
+                    {label}
+                  </Text>
+                  <View
+                    className="flex-row items-center bg-white rounded-2xl px-3 border border-gray-200"
+                    style={shadow}
+                  >
+                    <Text className="text-gray-400 text-sm mr-1">KSH</Text>
+                    <TextInput
+                      className="flex-1 py-3 text-gray-800"
+                      placeholder={placeholder}
+                      placeholderTextColor="#9CA3AF"
+                      keyboardType="numeric"
+                      value={value}
+                      onChangeText={onChange}
+                    />
+                  </View>
+                </View>
+              ))}
+            </View>
+            {/* Price Presets */}
+            <View className="flex-row flex-wrap gap-2">
+              {PRICE_PRESETS.map((p) => {
+                const active = minPrice === p.min && maxPrice === p.max;
+                return (
+                  <TouchableOpacity
+                    key={p.label}
+                    onPress={() => {
+                      setLocalMin(p.min ? String(p.min) : "");
+                      setLocalMax(p.max ? String(p.max) : "");
+                      setMinPrice(p.min);
+                      setMaxPrice(p.max);
+                    }}
+                    className={`px-3 py-1.5 rounded-full border ${
+                      active
+                        ? "bg-blue-50 border-blue-300"
+                        : "bg-white border-gray-200"
+                    }`}
+                  >
+                    <Text
+                      className={`text-xs font-medium ${
+                        active ? "text-blue-600" : "text-gray-500"
+                      }`}
+                    >
+                      {p.label}
+                    </Text>
+                  </TouchableOpacity>
+                );
+              })}
+            </View>
+          </ScrollView>
+          {/* Apply Button */}
+          <View className="px-5 pb-8 pt-4 bg-white border-t border-gray-100">
+            <TouchableOpacity
+              onPress={handleApply}
+              className="bg-blue-600 rounded-2xl py-4 items-center"
+              style={{
+                shadowColor: "#2563EB",
+                shadowOffset: { width: 0, height: 4 },
+                shadowOpacity: 0.3,
+                shadowRadius: 8,
+                elevation: 4,
+              }}
+            >
+              <Text className="text-white font-bold text-base">
+                Apply Filters{activeCount > 0 ? ` (${activeCount})` : ""}
+              </Text>
+            </TouchableOpacity>
+          </View>
         </View>
       </View>
     </Modal>
