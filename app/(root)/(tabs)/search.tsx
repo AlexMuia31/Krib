@@ -1,3 +1,4 @@
+import FilterModal from "@/components/FilterModal";
 import useFilterStore from "@/store/filterStore";
 import { Property } from "@/types";
 import Ionicons from "@expo/vector-icons/Ionicons";
@@ -80,15 +81,31 @@ export default function Search() {
               shadowRadius: 6,
               elevation: 2,
             }}
+            onPress={() => setShowFilters(true)}
           >
             <Ionicons
               name="options-outline"
               size={20}
               color={activeFilterCount > 0 ? "#fff" : "#374151"}
             />
+            {activeFilterCount > 0 && (
+              <View className="absolute -top-1 -right-1 w-4 h-4 bg-red-500 rounded-full items-center justify-center">
+                <Text className="text-white text-[9px] font-bold">
+                  {activeFilterCount}
+                </Text>
+              </View>
+            )}
           </TouchableOpacity>
         </View>
+        {/* Filter Chips */}
       </View>
+      {/* Results */}
+
+      {/* Filter Modal */}
+      <FilterModal
+        visible={showFilters}
+        onClose={() => setShowFilters(false)}
+      />
     </SafeAreaView>
   );
 }
