@@ -1,7 +1,7 @@
 import useFilterStore, { PropertyType } from "@/store/filterStore";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import React, { useState } from "react";
-import { Modal, Text, TouchableOpacity, View } from "react-native";
+import { Modal, ScrollView, Text, TouchableOpacity, View } from "react-native";
 
 const TYPES: { label: string; value: PropertyType }[] = [
   { label: "All", value: null },
@@ -22,8 +22,8 @@ const BEDS = [
 const PRICE_PRESETS = [
   { label: "Under ksh 1000000", min: null, max: 5000000 },
   { label: "ksh 1000000 – ksh 2000000", min: 5000000, max: 10000000 },
-  { label: "ksh 2000000 – ksh 4000000", min: 10000000, max: 2０００００００ },
-  { label: "Above ksh 4000０００", min: 2０００００００, max: null },
+  { label: "ksh 2000000 – ksh 4000000", min: 10000000, max: 20000000 },
+  { label: "Above ksh 4000000", min: 20000000, max: null },
 ];
 
 const chip = (active: boolean) =>
@@ -101,6 +101,55 @@ export default function FilterModal({
             <Text className="text-blue-600 font-semibold text-sm">Reset</Text>
           </TouchableOpacity>
         </View>
+        <ScrollView
+          className="flex-1"
+          contentContainerStyle={{ padding: 20, paddingBottom: 40 }}
+          showsVerticalScrollIndicator={false}
+        >
+          <Text className="text-base font-bold text-gray-800 mb-3">
+            Property Type
+          </Text>
+          <View className="flex-row flex-wrap gap-2 mb-6">
+            {TYPES.map((item) => (
+              <TouchableOpacity
+                key={String(item.value)}
+                onPress={() => setType(item.value)}
+                className={chip(type === item.value)}
+                style={shadow}
+              >
+                <Text className={chipText(type === item.value)}>
+                  {item.label}
+                </Text>
+              </TouchableOpacity>
+            ))}
+          </View>
+          {/* Bedrooms */}
+          <Text className="text-base font-bold text-gray-800 mb-3">
+            Bedrooms
+          </Text>
+          <View className="flex-row gap-2 mb-6">
+            {BEDS.map((item) => (
+              <TouchableOpacity
+                key={String(item.value)}
+                onPress={() => setBedrooms(item.value)}
+                className={`flex-1 items-center py-3 rounded-2xl border ${
+                  bedrooms === item.value
+                    ? "bg-blue-600 border-blue-600"
+                    : "bg-white border-gray-200"
+                }`}
+                style={shadow}
+              >
+                <Text
+                  className={`text-sm font-bold ${
+                    bedrooms === item.value ? "text-white" : "text-gray-600"
+                  }`}
+                >
+                  {item.label}
+                </Text>
+              </TouchableOpacity>
+            ))}
+          </View>
+        </ScrollView>
       </View>
     </Modal>
   );
