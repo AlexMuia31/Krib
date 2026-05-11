@@ -15,6 +15,7 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 const { width } = Dimensions.get("window");
 
@@ -58,32 +59,34 @@ export default function PropertyDetails() {
   }
 
   return (
-    <View className="flex-1 bg-white">
-      <ScrollView>
-        <View>
-          <View style={{ opacity: property.is_sold ? 0.5 : 1 }}>
-            <FlatList
-              data={property.images}
-              keyExtractor={(_, i) => i.toString()}
-              renderItem={({ item }) => (
-                <TouchableOpacity onPress={() => setImageViewerVisible(true)}>
-                  <Image
-                    source={{ uri: item }}
-                    style={{ width, height: 300 }}
-                    resizeMode="cover"
-                  />
-                </TouchableOpacity>
-              )}
-              horizontal
-              pagingEnabled
-              showsHorizontalScrollIndicator={false}
-              onScroll={onScroll}
-              scrollEventThrottle={16}
-            />
+    <SafeAreaView className="flex-1">
+      <View className="flex-1 bg-white">
+        <ScrollView>
+          <View>
+            <View style={{ opacity: property.is_sold ? 0.5 : 1 }}>
+              <FlatList
+                data={property.images}
+                keyExtractor={(_, i) => i.toString()}
+                renderItem={({ item }) => (
+                  <TouchableOpacity onPress={() => setImageViewerVisible(true)}>
+                    <Image
+                      source={{ uri: item }}
+                      style={{ width, height: 300 }}
+                      resizeMode="cover"
+                    />
+                  </TouchableOpacity>
+                )}
+                horizontal
+                pagingEnabled
+                showsHorizontalScrollIndicator={false}
+                onScroll={onScroll}
+                scrollEventThrottle={16}
+              />
+            </View>
           </View>
-        </View>
-      </ScrollView>
-      <Text>PropertyDetails</Text>
-    </View>
+        </ScrollView>
+        <Text>PropertyDetails</Text>
+      </View>
+    </SafeAreaView>
   );
 }
