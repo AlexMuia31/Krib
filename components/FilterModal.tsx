@@ -172,7 +172,7 @@ export default function FilterModal({
                 label: "Max Price",
                 value: localMax,
                 onChange: setLocalMax,
-                placeholder: "Any",
+                placeholder: "50000000",
               },
             ].map(({ label, value, onChange, placeholder }) => (
               <View key={label} className="flex-1">
@@ -196,7 +196,55 @@ export default function FilterModal({
               </View>
             ))}
           </View>
+          {/* Price Presets */}
+          <View className="flex-row flex-wrap gap-2">
+            {PRICE_PRESETS.map((p) => {
+              const active = minPrice === p.min && maxPrice === p.max;
+              return (
+                <TouchableOpacity
+                  key={p.label}
+                  onPress={() => {
+                    setLocalMin(p.min ? String(p.min) : "");
+                    setLocalMax(p.max ? String(p.max) : "");
+                    setMinPrice(p.min);
+                    setMaxPrice(p.max);
+                  }}
+                  className={`px-3 py-1.5 rounded-full border ${
+                    active
+                      ? "bg-blue-50 border-blue-300"
+                      : "bg-white border-gray-200"
+                  }`}
+                >
+                  <Text
+                    className={`text-xs font-medium ${
+                      active ? "text-blue-600" : "text-gray-500"
+                    }`}
+                  >
+                    {p.label}
+                  </Text>
+                </TouchableOpacity>
+              );
+            })}
+          </View>
         </ScrollView>
+        {/* Apply Button */}
+        <View className="px-5 pb-8 pt-4 bg-white border-t border-gray-100">
+          <TouchableOpacity
+            onPress={handleApply}
+            className="bg-blue-600 rounded-2xl py-4 items-center"
+            style={{
+              shadowColor: "#2563EB",
+              shadowOffset: { width: 0, height: 4 },
+              shadowOpacity: 0.3,
+              shadowRadius: 8,
+              elevation: 4,
+            }}
+          >
+            <Text className="text-white font-bold text-base">
+              Apply Filters{activeCount > 0 ? ` (${activeCount})` : ""}
+            </Text>
+          </TouchableOpacity>
+        </View>
       </View>
     </Modal>
   );
