@@ -1,7 +1,14 @@
 import useFilterStore, { PropertyType } from "@/store/filterStore";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import React, { useState } from "react";
-import { Modal, ScrollView, Text, TouchableOpacity, View } from "react-native";
+import {
+  Modal,
+  ScrollView,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View,
+} from "react-native";
 
 const TYPES: { label: string; value: PropertyType }[] = [
   { label: "All", value: null },
@@ -147,6 +154,46 @@ export default function FilterModal({
                   {item.label}
                 </Text>
               </TouchableOpacity>
+            ))}
+          </View>
+          {/* Price Range */}
+          <Text className="text-base font-bold text-gray-800 mb-3">
+            Price Range (KSH)
+          </Text>
+          <View className="flex-row gap-3 mb-3">
+            {[
+              {
+                label: "Min Price",
+                value: localMin,
+                onChange: setLocalMin,
+                placeholder: "0",
+              },
+              {
+                label: "Max Price",
+                value: localMax,
+                onChange: setLocalMax,
+                placeholder: "Any",
+              },
+            ].map(({ label, value, onChange, placeholder }) => (
+              <View key={label} className="flex-1">
+                <Text className="text-xs text-gray-500 mb-1.5 font-medium">
+                  {label}
+                </Text>
+                <View
+                  className="flex-row items-center bg-white rounded-2xl px-3 border border-gray-200"
+                  style={shadow}
+                >
+                  <Text className="text-gray-400 text-sm mr-1">KSH</Text>
+                  <TextInput
+                    className="flex-1 py-3 text-gray-800"
+                    placeholder={placeholder}
+                    placeholderTextColor="#9CA3AF"
+                    keyboardType="numeric"
+                    value={value}
+                    onChangeText={onChange}
+                  />
+                </View>
+              </View>
             ))}
           </View>
         </ScrollView>
