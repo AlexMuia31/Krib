@@ -156,6 +156,25 @@ export default function PropertyDetails() {
               Ksh {property.price}
             </Text>
           </View>
+          {/* Specs Row */}
+          <View className="flex-row justify-between bg-gray-50 rounded-2xl p-4 mb-5">
+            <SpecItem
+              icon="bed-outline"
+              label="Beds"
+              value={`${property.bedrooms}`}
+            />
+            <SpecItem
+              icon="water-outline"
+              label="Baths"
+              value={`${property.bathrooms}`}
+            />
+            <SpecItem
+              icon="expand-outline"
+              label="Area"
+              value={`${property.area_sqft} ft²`}
+            />
+            <SpecItem icon="home-outline" label="Type" value={property.type} />
+          </View>
         </ScrollView>
       </View>
     </SafeAreaView>

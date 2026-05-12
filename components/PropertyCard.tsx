@@ -1,6 +1,7 @@
+import { useSavedProperty } from "@/hooks/useSavedProperty";
 import { Property } from "@/types";
 import Ionicons from "@expo/vector-icons/Ionicons";
-import { useRouter } from "expo-router";
+import { useLocalSearchParams, useRouter } from "expo-router";
 import React from "react";
 import { Image, Text, TouchableOpacity, View } from "react-native";
 
@@ -14,8 +15,10 @@ export default function PropertyCard({
   showSave?: boolean;
 }) {
   const router = useRouter();
+  const { id } = useLocalSearchParams<{ id: string }>();
 
-  const isSaved = true;
+  const { isSaved, saveLoading, toggleSave } = useSavedProperty(id ?? "");
+
   return (
     <TouchableOpacity
       className="flex-row mb-4 rounded-3xl overflow-hidden bg-white"
@@ -30,7 +33,12 @@ export default function PropertyCard({
       // onPress={() => router.push(`/(root)/property/${property.id}`)}
     >
       <Image
-        source={{ uri: property.images.length >0 ? property.images[0]: require("../assets/images/kribb.png") }}
+        source={{
+          uri:
+            property.images.length > 0
+              ? property.images[0]
+              : require("../assets/images/kribb.png"),
+        }}
         className="w-28 h-28"
         resizeMode="cover"
       />
