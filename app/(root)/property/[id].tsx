@@ -20,6 +20,7 @@ import {
   View,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { WebView } from "react-native-webview";
 
 const { width } = Dimensions.get("window");
 
@@ -79,6 +80,12 @@ export default function PropertyDetails() {
     expanded || !isLongDesc
       ? property.description
       : property.description?.slice(0, 150) + "...";
+
+  const mapUrl = `https://www.openstreetmap.org/export/embed.html?bbox=${
+    property.longitude - 0.003
+  }%2C${property.latitude - 0.003}%2C${property.longitude + 0.003}%2C${
+    property.latitude + 0.003
+  }&layer=mapnik&marker=${property.latitude}%2C${property.longitude}`;
 
   return (
     <SafeAreaView className="flex-1">
@@ -218,6 +225,28 @@ export default function PropertyDetails() {
                 {property.address}, {property.city}
               </Text>
             </View>
+            <TouchableOpacity
+              className="rounded-2xl overflow-hidden mb-6"
+              style={{ height: 200 }}
+              onPress={() =>
+                router.push({
+                  pathname: "/(root)/property/map",
+                  params: {
+                    latitude: property.latitude,
+                    longitude: property.longitude,
+                    title: property.title,
+                    address: `${property.address}, ${property.city}`,
+                  },
+                })
+              }
+            >
+              <WebView
+                source={{ uri: mapUrl }}
+                style={{ flex: 1 }}
+                scrollEnabled={false}
+                pointerEvents="none"
+              />
+            </TouchableOpacity>
           </View>
         </ScrollView>
       </View>
