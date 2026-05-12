@@ -1,7 +1,10 @@
+import { useSavedProperty } from "@/hooks/useSavedProperty";
+import { useSupabase } from "@/hooks/useSupabase";
 import { supabase } from "@/lib/supabase";
 import { useUserStore } from "@/store/userStore";
 import { Property } from "@/types";
 import { useAuth } from "@clerk/expo";
+import Ionicons from "@expo/vector-icons/Ionicons";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import React, { useEffect, useState } from "react";
 import {
@@ -30,6 +33,10 @@ export default function PropertyDetails() {
   const [activeIndex, setActiveIndex] = useState(0);
   const [expanded, setExpanded] = useState(false);
   const [imageViewerVisible, setImageViewerVisible] = useState(false);
+
+  const { isSaved, saveLoading, toggleSave } = useSavedProperty(id ?? "");
+
+  const authSupabase = useSupabase();
 
   const fetchProperty = async () => {
     const { data } = await supabase
@@ -83,10 +90,92 @@ export default function PropertyDetails() {
                 scrollEventThrottle={16}
               />
             </View>
+            {/* Image count badge */}
+            <View className="absolute bottom-3 right-4 bg-black/50 px-3 py-1 rounded-full">
+              <Text className="text-white text-xs font-medium">
+                {activeIndex + 1}/{property.images.length}
+              </Text>
+            </View>
+          </View>
+          <View className="absolute top-0 left-0 right-0">
+            <View className="flex-row items-center justify-between px-4 pt-2">
+              <TouchableOpacity
+                onPress={() => router.back()}
+                className="w-10 h-10 bg-white rounded-full items-center justify-center"
+                style={{ elevation: 3 }}
+              >
+                <Ionicons name="arrow-back" size={20} color="#111827" />
+              </TouchableOpacity>
+              <TouchableOpacity
+                onPress={toggleSave}
+                disabled={saveLoading}
+                className="w-10 h-10 bg-white rounded-full items-center justify-center"
+                style={{ elevation: 3 }}
+              >
+                <Ionicons
+                  name={isSaved ? "heart" : "heart-outline"}
+                  size={20}
+                  color={isSaved ? "#EF4444" : "#111827"}
+                />
+              </TouchableOpacity>
+            </View>
+          </View>
+          {/* Content */}
+          <View
+            className="px-5 pt-5 pb-8"
+            style={{ opacity: property.is_sold ? 0.6 : 1 }}
+          >
+            {/* Badges */}
+            <View className="flex-row gap-2 mb-3 flex-wrap">
+              <View className="bg-blue-50 px-3 py-1 rounded-full">
+                <Text className="text-blue-600 text-xs font-semibold capitalize">
+                  {property.type}
+                </Text>
+              </View>
+              {property.is_featured && (
+                <View className="bg-amber-50 px-3 py-1 rounded-full">
+                  <Text className="text-amber-600 text-xs font-semibold">
+                    ⭐ Featured
+                  </Text>
+                </View>
+              )}
+              {property.is_sold && (
+                <View className="bg-red-50 px-3 py-1 rounded-full">
+                  <Text className="text-red-500 text-xs font-semibold">
+                    Sold
+                  </Text>
+                </View>
+              )}
+            </View>
+
+            {/* Title + Price */}
+            <Text className="text-2xl font-bold text-gray-900 mb-1">
+              {property.title}
+            </Text>
+            <Text className="text-blue-600 text-xl font-bold mb-4">
+              Ksh {property.price}
+            </Text>
           </View>
         </ScrollView>
-        <Text>PropertyDetails</Text>
       </View>
     </SafeAreaView>
+  );
+}
+
+function SpecItem({
+  icon,
+  label,
+  value,
+}: {
+  icon: keyof typeof Ionicons.glyphMap;
+  label: string;
+  value: string;
+}) {
+  return (
+    <View className="items-center gap-1">
+      <Ionicons name={icon} size={20} color="#2563EB" />
+      <Text className="text-gray-900 font-bold text-sm">{value}</Text>
+      <Text className="text-gray-400 text-xs">{label}</Text>
+    </View>
   );
 }
