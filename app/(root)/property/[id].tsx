@@ -8,6 +8,7 @@ import Ionicons from "@expo/vector-icons/Ionicons";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import React, { useEffect, useState } from "react";
 import {
+  ActivityIndicator,
   Dimensions,
   FlatList,
   Image,
@@ -57,6 +58,14 @@ export default function PropertyDetails() {
     setActiveIndex(index);
   };
 
+  if (loading) {
+    return (
+      <View className="flex-1 items-center justify-center bg-white">
+        <ActivityIndicator size="large" color="#2563EB" />
+      </View>
+    );
+  }
+
   if (!property) {
     return (
       <View className="flex-1 items-center justify-center bg-white">
@@ -64,6 +73,12 @@ export default function PropertyDetails() {
       </View>
     );
   }
+
+  const isLongDesc = (property.description?.length ?? 0) > 150;
+  const displayDesc =
+    expanded || !isLongDesc
+      ? property.description
+      : property.description?.slice(0, 150) + "...";
 
   return (
     <SafeAreaView className="flex-1">
@@ -174,6 +189,35 @@ export default function PropertyDetails() {
               value={`${property.area_sqft} ft²`}
             />
             <SpecItem icon="home-outline" label="Type" value={property.type} />
+          </View>
+          {/* Description */}
+          <View className="px-5">
+            <Text className="text-base font-bold text-gray-900 mb-2">
+              Description
+            </Text>
+            <Text className="text-gray-500 text-sm leading-6 mb-1">
+              {displayDesc}
+            </Text>
+            {isLongDesc && (
+              <TouchableOpacity onPress={() => setExpanded(!expanded)}>
+                <Text className="text-blue-600 text-sm font-medium mb-5">
+                  {expanded ? "Show less" : "Read more"}
+                </Text>
+              </TouchableOpacity>
+            )}
+          </View>
+          <View className="mb-5" />
+          {/* Location */}
+          <View className="px-5">
+            <Text className="text-base font-bold text-gray-900 mb-2">
+              Location
+            </Text>
+            <View className="flex-row items-center gap-2 mb-4">
+              <Ionicons name="location-outline" size={16} color="#6B7280" />
+              <Text className="text-gray-500 text-sm flex-1">
+                {property.address}, {property.city}
+              </Text>
+            </View>
           </View>
         </ScrollView>
       </View>
