@@ -12,6 +12,7 @@ import {
   Dimensions,
   FlatList,
   Image,
+  Linking,
   NativeScrollEvent,
   NativeSyntheticEvent,
   ScrollView,
@@ -23,6 +24,8 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { WebView } from "react-native-webview";
 
 const { width } = Dimensions.get("window");
+
+const ADMIN_PHONE = "+254707535013";
 
 export default function PropertyDetails() {
   const { id } = useLocalSearchParams<{ id: string }>();
@@ -86,6 +89,14 @@ export default function PropertyDetails() {
   }%2C${property.latitude - 0.003}%2C${property.longitude + 0.003}%2C${
     property.latitude + 0.003
   }&layer=mapnik&marker=${property.latitude}%2C${property.longitude}`;
+
+  const handleContact = () => {
+    const message = `Hi! I'm interested in the property: ${property?.title}`;
+    const url = `https://wa.me/${ADMIN_PHONE}?text=${encodeURIComponent(
+      message,
+    )}`;
+    Linking.openURL(url);
+  };
 
   return (
     <SafeAreaView className="flex-1">
@@ -246,6 +257,22 @@ export default function PropertyDetails() {
                 scrollEnabled={false}
                 pointerEvents="none"
               />
+              <View className="absolute bottom-3 right-3 bg-white/90 px-3 py-1 rounded-full flex-row items-center gap-1">
+                <Ionicons name="expand-outline" size={12} color="#374151" />
+                <Text className="text-gray-600 text-xs font-medium">
+                  Tap to expand
+                </Text>
+              </View>
+            </TouchableOpacity>
+            {/* Contact Button */}
+            <TouchableOpacity
+              onPress={handleContact}
+              className="flex-row items-center justify-center gap-2 bg-blue-600 py-4 rounded-2xl mb-4"
+            >
+              <Ionicons name="logo-whatsapp" size={20} color="white" />
+              <Text className="text-white font-bold text-base">
+                Contact Agent
+              </Text>
             </TouchableOpacity>
           </View>
         </ScrollView>
