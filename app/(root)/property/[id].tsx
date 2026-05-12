@@ -9,6 +9,7 @@ import { useLocalSearchParams, useRouter } from "expo-router";
 import React, { useEffect, useState } from "react";
 import {
   ActivityIndicator,
+  Alert,
   Dimensions,
   FlatList,
   Image,
@@ -20,6 +21,7 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
+import ImageViewing from "react-native-image-viewing";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { WebView } from "react-native-webview";
 
@@ -56,6 +58,36 @@ export default function PropertyDetails() {
   useEffect(() => {
     fetchProperty();
   }, [id]);
+
+  const handleDelete = () => {
+    Alert.alert("Delete Property", "Are you sure?", [
+      { text: "Cancel", style: "cancel" },
+      {
+        text: "Delete",
+        style: "destructive",
+        onPress: async () => {
+          await authSupabase.from("properties").delete().eq("id", id);
+          router.replace("/(root)/(tabs)");
+        },
+      },
+    ]);
+  };
+
+  const handleMarkSold = () => {
+    Alert.alert("Mark as Sold", "Are you sure?", [
+      { text: "Cancel", style: "cancel" },
+      {
+        text: "Mark Sold",
+        onPress: async () => {
+          await authSupabase
+            .from("properties")
+            .update({ is_sold: true })
+            .eq("id", id);
+          setProperty((prev) => (prev ? { ...prev, is_sold: true } : prev));
+        },
+      },
+    ]);
+  };
 
   const onScroll = (e: NativeSyntheticEvent<NativeScrollEvent>) => {
     const index = Math.round(e.nativeEvent.contentOffset.x / width);
@@ -267,16 +299,50 @@ export default function PropertyDetails() {
             {/* Contact Button */}
             <TouchableOpacity
               onPress={handleContact}
-              className="flex-row items-center justify-center gap-2 bg-blue-600 py-4 rounded-2xl mb-4"
+              className="flex-row items-center justify-center gap-2 bg-green-600 py-4 rounded-2xl mb-4"
             >
               <Ionicons name="logo-whatsapp" size={20} color="white" />
               <Text className="text-white font-bold text-base">
                 Contact Agent
               </Text>
             </TouchableOpacity>
+            {/* Admin Actions */}
+            {isAdmin && (
+              <View className="flex-row gap-3">
+                {!property.is_sold && (
+                  <TouchableOpacity
+                    onPress={handleMarkSold}
+                    className="flex-1 flex-row items-center justify-center gap-2 bg-amber-50 py-4 rounded-2xl border border-amber-200"
+                  >
+                    <Ionicons
+                      name="checkmark-circle-outline"
+                      size={18}
+                      color="#D97706"
+                    />
+                    <Text className="text-amber-600 font-semibold">
+                      Mark Sold
+                    </Text>
+                  </TouchableOpacity>
+                )}
+                <TouchableOpacity
+                  onPress={handleDelete}
+                  className="flex-1 flex-row items-center justify-center gap-2 bg-red-50 py-4 rounded-2xl border border-red-100"
+                >
+                  <Ionicons name="trash-outline" size={18} color="#EF4444" />
+                  <Text className="text-red-500 font-semibold">Delete</Text>
+                </TouchableOpacity>
+              </View>
+            )}
           </View>
         </ScrollView>
       </View>
+      {/* Image Viewer */}
+      <ImageViewing
+        images={property.images.map((uri) => ({ uri }))}
+        imageIndex={activeIndex}
+        visible={imageViewerVisible}
+        onRequestClose={() => setImageViewerVisible(false)}
+      />
     </SafeAreaView>
   );
 }
